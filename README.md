@@ -1,4 +1,4 @@
-# SecureDrive-FL: Privacy-Preserving & Byzantine-Robust Federated Learning for Connected Autonomous Vehicles
+## A study on SecureDrive-FL: Privacy-Preserving Federated Learning for Connected Autonomous Vehicles
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
