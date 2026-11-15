@@ -11,8 +11,7 @@ An open-source implementation and extension of **SecureDrive-FL**, a federated l
 This repository provides:
 1. **Full Paper Reproduction**: End-to-end implementation of DP-SGD with Gradient-Aware Selective Homomorphic Encryption (GASHE), TenSEAL CKKS encryption, dynamic thresholding, and server-side 3-$\sigma$ Loss Guard.
 2. **Compute-Budgeted Extension**: Dynamic chunked selective encryption addressing real-world vehicular hardware heterogeneity (compute-constrained on-board units) to maximize Byzantine protection within per-round latency deadlines.
-3. **Formal Verification**: Full 33-test test suite verifying cryptographic invariants, zero-leakage masking, non-repudiation, and privacy bounds.
-4. **Comprehensive Documentation & Reports**: Publication report PDF, LaTeX sources, viva defense implementation guide (`docs/implement.md`), and raw result tables.
+
 
 ---
 
@@ -227,21 +226,8 @@ All output plots are saved to `figures/` and tables to `tables/`.
 ## 5. Detailed Documentation
 
 For an in-depth explanation of every mathematical formula, design choice, and viva defense question, consult:
-- **[docs/implement.md](docs/implement.md)**: Comprehensive viva implementation handbook covering every algorithm, baseline deviation, and architectural design decision.
 - **[docs/report.pdf](docs/report.pdf)**: Complete research report formatted for ACM/IEEE publication.
 - **[docs/claims_report.md](docs/claims_report.md)**: Formal verification that all 8 research hypotheses (H1 to H8) hold strictly true.
-
----
-
-## 6. Verification Test Suite
-
-Run the full automated test suite covering all 33 cryptographic, budget invariant, and differential privacy properties:
-
-```bash
-pytest tests/ -v
-```
-
-All 33/33 tests pass deterministically across both local workstations and Linux HPC environments.
 
 ---
 
