@@ -1,0 +1,33 @@
+### Table II: Wall-Clock Execution Time, Relative Overhead, and Peak Memory (RSS)
+*Metadata: Rounds=120 | Data=real | HE=tenseal | Seeds=42,123,456*
+
+
+| Configuration | Condition | Time (s) | Overhead (x vs FedAvg-clean) | Peak RSS (MB) |
+| --- | --- | --- | --- | --- |
+| Standard FL (FedAvg) | Clean | 215.61 ± 0.85 | 1.00x | 1677.1 ± 4.0 |
+| Standard FL (FedAvg) | Mitm | 206.10 ± 1.98 | 0.96x | 402.1 ± 1.8 |
+| Standard FL (FedAvg) | Poison | 281.75 ± 5.73 | 1.31x | 407.3 ± 0.2 |
+| FL + DP-SGD (eps0=4) | Clean | 339.47 ± 4.33 | 1.57x | 404.7 ± 0.8 |
+| FL + DP-SGD (eps0=4) | Mitm | 343.44 ± 5.74 | 1.59x | 403.7 ± 1.1 |
+| FL + DP-SGD (eps0=4) | Poison | 454.43 ± 4.02 | 2.11x | 409.3 ± 2.9 |
+| FL + GASHE-only | Clean | 223.83 ± 6.38 | 1.04x | 416.4 ± 0.7 |
+| FL + GASHE-only | Mitm | 220.14 ± 1.62 | 1.02x | 401.9 ± 7.8 |
+| FL + GASHE-only | Poison | 292.18 ± 10.13 | 1.36x | 421.5 ± 0.8 |
+| FL + Full-CKKS | Clean | 232.26 ± 3.71 | 1.08x | 416.8 ± 0.6 |
+| FL + Full-CKKS | Mitm | 223.68 ± 3.77 | 1.04x | 410.1 ± 3.7 |
+| FL + Full-CKKS | Poison | 288.11 ± 5.12 | 1.34x | 420.4 ± 1.7 |
+| SecureDrive-FL | Clean | 355.29 ± 5.81 | 1.65x | 414.1 ± 1.4 |
+| SecureDrive-FL | Mitm | 352.49 ± 2.44 | 1.63x | 407.8 ± 2.2 |
+| SecureDrive-FL | Poison | 472.55 ± 5.47 | 2.19x | 422.1 ± 0.3 |
+| TrimmedMean | Clean | 209.28 ± 4.32 | 0.97x | 402.1 ± 0.5 |
+| TrimmedMean | Mitm | 204.93 ± 1.42 | 0.95x | 403.2 ± 0.5 |
+| TrimmedMean | Poison | 284.81 ± 3.99 | 1.32x | 406.6 ± 0.7 |
+| Krum | Clean | 209.81 ± 2.31 | 0.97x | 400.9 ± 2.2 |
+| Krum | Mitm | 206.51 ± 1.43 | 0.96x | 402.1 ± 1.2 |
+| Krum | Poison | 281.22 ± 10.22 | 1.30x | 406.4 ± 1.4 |
+| BatchCrypt | Clean | 220.14 ± 1.02 | 1.02x | 415.9 ± 1.2 |
+| BatchCrypt | Mitm | 222.31 ± 2.65 | 1.03x | 412.4 ± 2.3 |
+| BatchCrypt | Poison | 289.45 ± 5.78 | 1.34x | 420.1 ± 1.7 |
+| FedProx | Clean | 212.27 ± 1.14 | 0.98x | 402.6 ± 0.5 |
+| FedProx | Mitm | 209.04 ± 1.23 | 0.97x | 403.6 ± 0.9 |
+| FedProx | Poison | 287.90 ± 10.48 | 1.34x | 408.6 ± 0.7 |

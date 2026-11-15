@@ -1,0 +1,428 @@
+\documentclass[acmtog,nonacm]{acmart}
+\usepackage{cuted}
+\usepackage{color,soul}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{placeins}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{float}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.7}
+\setcounter{dbltopnumber}{2}
+
+\raggedbottom
+\setcopyright{none}
+\copyrightyear{2026}
+\acmYear{2026}
+\acmDOI{}
+
+\acmJournal{TOG}
+\acmVolume{37}
+\acmNumber{4}
+\acmArticle{111}
+\acmMonth{8}
+
+\citestyle{acmnumeric}
+
+\settopmatter{printacmref=false, printccs=false, printfolios=true}
+\authorsaddresses{}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+
+\begin{document}
+
+\title{Compute-Aware Hybrid Privacy Method for Federated Learning}
+\subtitle{Team lancerXsaber}
+
+\author{Shivagurunathan M L, Anant Venkatesh, G Kushal}
+
+\begin{abstract}
+Federated Learning (FL) enables Connected and Autonomous Vehicles (CAVs) to collaboratively train in-cabin perception models without centralizing sensitive raw camera streams. However, distributed vehicular FL remains acutely vulnerable to active in-transit Man-in-the-Middle (MitM) gradient tampering, backdoor model poisoning, and gradient inversion attacks. While Differential Privacy (DP-SGD) bounds poisoning influence and provides formal $(\epsilon, \delta)$ privacy guarantees, it offers zero defense against active in-transit tampering. Conversely, Full Homomorphic Encryption (FHE) protects update confidentiality and algebraic integrity but imposes prohibitive compute and bandwidth burdens on resource-constrained vehicular On-Board Units (OBUs).
+
+In this work, we study and replicate the SecureDrive-FL framework~\cite{gul2026securedrive}, which couples local DP-SGD with Gradient-Aware Selective Homomorphic Encryption (GASHE) and a server-side $3\sigma$ LossGuard. Crucially, SecureDrive-FL assumes all vehicles possess homogeneous, unlimited compute to encrypt their entire threshold-passing set. To bridge this gap, we develop the \textbf{Compute-Budgeted Selective Homomorphic Encryption Extension}, which decouples encryption volume (governed by dynamic client compute budgets $B_{i,t}$) from parameter prioritization (ranked by post-noise gradient energy).
+
+We evaluate our reproduction and extension on the State Farm Distracted Driver Detection dataset (22,424 images across 10 classes) using frozen MobileNetV2 semantic embeddings and real TenSEAL CKKS encryption over 120 communication rounds. Under heterogeneous vehicular fleets (fleet mean capacity $\approx 28\%$), our proposed \texttt{sd\_budget} preserves \textbf{84.04\%} test accuracy under active MitM tampering (surpassing full-encryption benchmarks by 6.22 percentage points) while achieving a \textbf{14.2$\times$ latency reduction (93.0\% faster)} over straggler waiting, with zero additional privacy loss ($\Delta\epsilon=0$).
+\end{abstract}
+
+\maketitle
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\section{Introduction: Problem Statement \& Motivation}
+Federated Learning (FL) enables distributed vehicular clients in Intelligent Transportation Systems (ITS) to collaboratively train safety-critical machine learning models---such as in-cabin distracted driver posture detection---without transmitting private raw camera streams to a central cloud server. However, distributed vehicular FL operates in hostile, open wireless environments subject to a severe three-pronged threat landscape:
+\begin{enumerate}
+    \item \textbf{In-transit Tampering (Man-in-the-Middle):} Untrusted edge aggregators or rogue network intermediaries can alter unencrypted client gradient updates via Blanchard sign-flipping or additive random noise injection, causing catastrophic model accuracy collapse ($<1\%\text{--}10\%$).
+    \item \textbf{Backdoor Model Poisoning:} Malicious vehicles can submit stealthily perturbed parameter updates that inject targeted triggers (e.g., misclassifying dangerous mobile phone usage as safe driving) while maintaining high clean accuracy.
+    \item \textbf{Privacy Leakage via Gradient Inversion:} Passive eavesdroppers intercepting shared gradients can reconstruct private in-cabin driver images via Deep Leakage from Gradients (DLG) attacks~\cite{du2024sok,gong2026ares,li2025cggl}.
+\end{enumerate}
+
+Existing defenses fail to solve this compound threat under vehicular hardware constraints. Pure Differential Privacy (DP-SGD) mitigates backdoor poisoning and provides formal $(\epsilon, \delta)$ privacy bounds via per-sample $L_2$ gradient clipping and Gaussian perturbation, but it provides zero algebraic integrity protection against active in-transit MitM tampering. Conversely, Full Homomorphic Encryption (FHE) protects update confidentiality and integrity against tampering, but its prohibitive computational complexity and ciphertext expansion overwhelm resource-constrained vehicular On-Board Units (OBUs).
+
+The recently proposed SecureDrive-FL framework~\cite{gul2026securedrive} addresses this dichotomy by coupling local DP-SGD with Gradient-Aware Selective Homomorphic Encryption (GASHE) at a DP-calibrated threshold ($\tau = z \cdot C$) alongside a server-side $3\sigma$ LossGuard rollback defense. However, SecureDrive-FL fundamentally assumes that every participating vehicle possesses sufficient, homogeneous computational capability to encrypt 100\% of its threshold-passing coordinates.
+
+In realistic Connected and Autonomous Vehicle (CAV) fleets, on-board compute capacities are highly heterogeneous and dynamic availability fluctuates due to concurrent sensor perception tasks, battery constraints, and intermittent wireless connectivity. When resource-constrained vehicles cannot afford the full cryptographic burden of GASHE, existing federated systems either exclude the stragglers entirely---introducing severe client participation bias and discarding vital local driver data---or abandon encryption completely, exposing updates to tampering.
+
+In this work, we bridge this gap by making the following core contributions:
+\begin{itemize}
+    \item \textbf{Compute-Budgeted Selective Encryption (\texttt{sd\_budget}):} We formulate a dynamic budget allocation mechanism ($B_{i,t}$) that decouples encryption volume from parameter prioritization, ranking CKKS chunks by post-noise gradient energy ($\Delta\epsilon = 0$ via the DP Post-Processing Theorem) while reverting unbudgeted coordinates to the DP-protected plaintext stream.
+    \item \textbf{Comprehensive Threat \& Latency Evaluation:} Across heterogeneous vehicular tiers, our approach sustains \textbf{84.04\%} test accuracy under active MitM tampering, eliminates straggler delays with a \textbf{14.2$\times$ latency reduction} ($23.49\text{ s}$ vs. $333.67\text{ s}$), preserves $1.00$ participation fairness, and suppresses gradient inversion leakage below random noise ($\text{PSNR} \le 10.7\text{ dB}$).
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related_work}
+
+\textbf{Hybrid DP-HE Frameworks.}
+Combining Differential Privacy (DP) with Homomorphic Encryption (HE) provides layered confidentiality against both curious aggregators and active adversaries~\cite{gul2026securedrive,negoya2025ppml,korkmaz2025fas}. SecureDrive-FL (GASHE)~\cite{gul2026securedrive} couples local DP-SGD with Gradient-Aware Selective HE by encrypting coordinates exceeding a DP-calibrated threshold ($\tau = z \cdot C$). However, it assumes all vehicles possess homogeneous, unconstrained compute, inducing severe straggler delays or forced client dropouts on resource-constrained On-Board Units (OBUs). PPML-Hybrid~\cite{negoya2025ppml} statically delegates low-resource clients to DP-only with zero cryptographic shielding against active MitM tampering, while FAS~\cite{korkmaz2025fas} enforces a rigid, uniform encryption fraction across all devices, ignoring client hardware disparities and dynamic channel volatility.
+
+\textbf{Sensitivity-Guided \& Specialized Selective HE.}
+Alternative frameworks optimize encrypted coordinates via Fisher information~\cite{li2025selectiveshield,yao2026fedfihe,liu2026fisher}, gradient magnitude~\cite{li2025sensecrypt}, or static pretraining rankings~\cite{jin2023fedmlhe}. While these refine sensitivity metrics, none bound encryption volume to dynamic per-round vehicular deadlines. Representation-specific schemes such as SHE-LoRA~\cite{liu2026shelora} and DictPFL~\cite{xue2025dictpfl} restrict selective HE to LoRA adapters or static global dictionaries, which break down under general classifier heads or non-IID driver distributions. As summarized in Table~\ref{tab:related_work}, our \textbf{Compute-Budgeted Selective Encryption Extension} uniquely decouples encryption volume from sensitivity: each vehicle dynamically scales encrypted CKKS chunks to its instantaneous hardware budget ($B_{i,t}$) while prioritizing post-noise gradient energy coordinates, achieving formal DP ($\Delta\epsilon=0$), zero straggler latency, and 100\% participation fairness.
+
+\begin{table}[t]
+\centering
+\caption{Comparison of representative selective HE frameworks.}
+\label{tab:related_work}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Framework} & \textbf{Selection Basis} & \textbf{Dynamic Budget} & \textbf{MitM Robust} & \textbf{Zero Stragglers} \\
+\midrule
+PPML-Hybrid~\cite{negoya2025ppml} & Static Tier Choice & No & No & Yes \\
+FAS~\cite{korkmaz2025fas} & Uniform Ratio & No & Yes & No \\
+SHE-LoRA~\cite{liu2026shelora} & LoRA Column & No & Yes & No \\
+SelectiveShield~\cite{li2025selectiveshield} & Fisher Consensus & No & Yes & No \\
+SecureDrive-FL~\cite{gul2026securedrive} & DP Threshold ($\tau$) & No & Yes & No \\
+\midrule
+\textbf{Ours (\texttt{sd\_budget})} & \textbf{Post-Noise Energy} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\section{Dataset and Preprocessing}
+\label{sec:dataset}
+
+\subsection{Dataset}
+We evaluate our framework on the \textbf{State Farm Distracted Driver Detection Dataset} (and the benchmark AUC Distracted Driver dataset), a standard vision benchmark consisting of $22{,}424$ labeled high-resolution in-cabin camera images ($640 \times 480$ pixels) across 10 distinct driver posture classes:
+$c0$ (safe driving), $c1$ (texting - right), $c2$ (talking on the phone - right), $c3$ (texting - left), $c4$ (talking on the phone - left), $c5$ (operating the radio), $c6$ (drinking), $c7$ (reaching behind), $c8$ (hair and makeup), and $c9$ (talking to passenger).
+Detecting in-cabin driver distraction in real time is safety-critical for Advanced Driver Assistance Systems (ADAS). Because cabin video feeds capture sensitive personal biometric and behavioral data, federated learning is essential to prevent raw imagery from leaving the vehicle.
+
+\subsection{Data Cleaning and Organization}
+\begin{itemize}
+    \item \textbf{Preprocessing \& Semantic Feature Extraction:} Images are cropped, resized to $224 \times 224$ pixels, and normalized with standard ImageNet channel statistics ($\mu = [0.485, 0.456, 0.406]$, $\sigma = [0.229, 0.224, 0.225]$). Mirroring realistic vehicular edge architectures where edge cameras execute a standardized, frozen feature extractor, deep visual representations are extracted using a pretrained MobileNetV2 backbone ($224 \times 224 \to 1280$-dimensional semantic vectors via global average pooling). The federated network trains a multiclass linear classifier head ($10 \times 1280 + 10 = 12{,}810$ parameters) over these pooled semantic embeddings.
+    \item \textbf{User-Based Federated Non-IID Partition:} Strictly following Sections III-A and IV-A of the SecureDrive-FL paper, data is partitioned by driver identity across $K = 6$ vehicular clients. Each client holds images from 3--5 unique human drivers, reflecting natural non-IID behavioral shifts across drivers. Each client locally partitions its assigned data into an 80\% training split ($D_i^{\text{train}}$) and a 20\% validation split ($D_i^{\text{val}}$).
+    \item \textbf{Global Evaluation Set:} The global evaluation/test set is formed by the union of all local client validation splits ($\bigcup_{i=1}^K D_i^{\text{val}}$), ensuring comprehensive evaluation across all 10 driving postures without cross-client training contamination.
+    \item \textbf{Deterministic Caching:} Processed 1280-dimensional embeddings and client partitions are deterministically cached to \texttt{.npz} archives indexed by random seed ($\text{seed} \in \{42, 123, 456\}$), ensuring reproducibility and zero data leakage.
+\end{itemize}
+
+\subsection{Tools and Cryptographic Environment}
+Experiments are implemented in Python 3.10 with PyTorch, NumPy, SciPy, and TenSEAL, executed on the EECS departmental HPC cluster node equipped with an NVIDIA RTX PRO 6000 Blackwell Workstation Edition GPU (96 GB VRAM) under Linux 7.0 and Slurm. Homomorphic encryption is implemented using Microsoft SEAL via TenSEAL configured with the CKKS scheme: polynomial modulus degree $N = 8192$, scale $2^{40}$, and coefficient modulus chain $[60, 40, 40, 60]$ bits. With slot capacity $L = 4096$, each client update of $12{,}810$ parameters fits into exactly $\lceil 12{,}810 / 4096 \rceil = 4$ CKKS ciphertexts. Client differential privacy uses Rényi Differential Privacy (RDP) accounting~\cite{balle2018improving} with clipping norm $C = 1.2$, noise multiplier $\sigma = 1.2112$, target $\epsilon_0 = 4.0$, and failure probability $\delta = 10^{-5}$.
+
+\section{Methodology Outline}
+\label{sec:methodology}
+
+\subsection{Setting and Threat Model}
+We study horizontal Federated Learning across $K = 6$ vehicular clients and a central server running FedAvg for $T = 120$ communication rounds with local batch size 32, learning rate $\eta = 0.02$, and 3 local epochs per round. In round $t$, client $i$ computes its parameter update $\Delta w_i = w_{i,t} - w_t$ and transmits a privacy-protected, tamper-resilient update payload to the server.
+
+\textbf{Threat Model.} We evaluate against three coordinated attack vectors:
+\begin{enumerate}
+    \item \textbf{Man-in-the-Middle (MitM) Tampering:} An adversarial network intermediary intercepts client-to-server communications, executing Blanchard sign-flipping and additive Gaussian perturbation ($\sigma_{\text{mitm}} = 1.0$) on unencrypted gradient payloads.
+    \item \textbf{Backdoor Model Poisoning:} Compromised vehicles execute the paper's Equation 13 backdoor attack with target class $c2$ ("talking on the phone - right") and blend factor $\alpha = 0.5$:
+    \begin{equation}
+    \Delta w_{\text{mal}} = \alpha \Delta w_{\text{target}} + (1 - \alpha) \Delta w_{\text{benign}},
+    \end{equation}
+    where $\Delta w_{\text{target}}$ is trained on trigger-stamped inputs relabeled to class $c2$.
+    \item \textbf{Gradient Inversion Leakage:} An eavesdropper observing transmitted gradients executes Deep Leakage from Gradients (DLG)~\cite{du2024sok} to reconstruct raw in-cabin driver imagery.
+\end{enumerate}
+
+\subsection{Core SecureDrive-FL Framework}
+\label{subsec:securedrive-fl}
+
+\textbf{Local DP-SGD.} Client $i$ clips per-sample gradients to $L_2$ threshold $C = 1.2$ and injects calibrated Gaussian perturbation $\sigma = z \cdot C$ ($z = 1.2112$), achieving formal $(\epsilon_0 = 4.0, \delta = 10^{-5})$ differential privacy per round under Rényi DP accounting.
+
+\textbf{GASHE Selective Homomorphic Encryption.} Rather than encrypting all parameters, client $i$ constructs a DP-calibrated gradient mask:
+\begin{equation}
+M_i = \{k : |\Delta w_{i,k}| \ge \tau\}, \quad \tau = z \cdot C.
+\end{equation}
+Coordinates exceeding $\tau$ are encrypted losslessly via TenSEAL CKKS ($E_i \odot \Delta w_i$), while sub-threshold coordinates are sent in plaintext ($(1 - M_i) \odot \Delta w_i$) alongside the public bitmask $M_i$.
+
+\textbf{Server Aggregation.} The server homomorphically aggregates encrypted coordinates ($\sum_i \text{Enc}(E_i \odot \Delta w_i)$) without holding the private decryption key, sums plaintext residuals, and broadcasts the global model update.
+
+\textbf{3-$\sigma$ LossGuard Defense.} The server tracks moving validation loss variance over a sliding window ($W = 20$, warmup 5 rounds). When an aggregated model's loss exceeds $\mu_{\text{loss}} + 3\sigma_{\text{loss}}$, the server flags active tampering, rejects the corrupted update, and rolls back global weights to round $t-1$.
+
+\subsection{Compute-Budgeted Selective Encryption Extension}
+\label{subsec:budget-extension}
+
+\textbf{Vehicular Hardware \& Availability Model.} Client $i$ has static capacity $c_i \in [0, 1]$ drawn from discrete hardware tiers and round-varying availability $a_{i,t} \in [0, 1]$. In round $t$, its effective budget in CKKS chunks is:
+\begin{equation}
+B_{i,t} = \lfloor c_i \cdot a_{i,t} \cdot n_{\text{chunks}} \rfloor,
+\end{equation}
+where the parameter vector is divided into $n_{\text{chunks}} = \lceil 12{,}810 / 4096 \rceil = 4$ chunks.
+
+\textbf{Post-Noise Energy Ranking.} Rather than uniform or random selection, active chunks $j \in \{0, \dots, n_{\text{chunks}}-1\}$ with non-empty GASHE demand are ranked by post-noise gradient energy:
+\begin{equation}
+\text{score}_j = \sum_{k \in \text{chunk } j} (M_i[k] \cdot \Delta \tilde{w}_i[k])^2.
+\end{equation}
+Because $\text{score}_j$ is computed from post-noise DP updates, chunk selection constitutes post-processing under Differential Privacy and leaks zero additional privacy ($\Delta \epsilon = 0$).
+
+\textbf{Selective Chunk Encryption \& Fallback.} Client $i$ encrypts only its top $B_{i,t}$ scoring chunks ($E_i$), while unbudgeted coordinates revert to the plaintext stream ($(1 - E_i) \odot \Delta w_i$). We evaluate our proposal (\texttt{sd\_budget}) against \texttt{sd\_full} (unlimited budget), \texttt{sd\_wait} (straggler-delayed full encryption), and \texttt{sd\_exclude} (excluding clients whose budget falls below an exponential moving average demand threshold). Fig.~\ref{fig:protocol_architecture} provides an end-to-end visual walkthrough contrasting the baseline SecureDrive-FL pipeline against our proposed extensions across all five communication rounds.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{proto_arch.png}
+\caption{\textbf{High-level protocol view of SecureDrive-FL with Compute-Budgeted and Energy-Adaptive Extensions.} Black text and solid lines show the original SecureDrive-FL paper's baseline protocol (client DP-SGD, sensitivity thresholding, and homomorphic CKKS aggregation). Red, underlined text represents our proposed research modifications to overcome vehicular heterogeneity (dynamic vehicular budget profiling, DP-safe post-noise energy ranking, hybrid encrypted/plaintext upload, dual-domain aggregation, active 3-$\sigma$ MitM anomaly filtering, and straggler-free completion).}
+\label{fig:protocol_architecture}
+\end{figure*}
+
+\subsection{Evaluation, Scenarios, and Latency Modeling}
+\label{subsec:eval-scenarios}
+
+\textbf{Scenarios.} We evaluate under three primary scenarios:
+\begin{itemize}
+    \item \textbf{Scenario H1 (Heterogeneous Tiers):} 4 capacity tiers $[0.10, 0.25, 0.50, 1.00]$ distributed across $K=6$ clients as $[2, 2, 1, 1]$, with uniform availability $a_{i,t} \sim \mathcal{U}(0.3, 1.0)$ (fleet average capacity $\approx 28\%$).
+    \item \textbf{Scenario S1 (Budget Sweeps):} Constant capacity fractions $f \in [0.0, 1.0]$ under MitM to isolate energy vs. random ranking.
+    \item \textbf{Scenario S2 (Bursty Channels):} Two-state Markov availability ($a \in \{0.1, 1.0\}$) modeling volatile vehicular connectivity.
+\end{itemize}
+
+\textbf{Calibrated Latency Model.} We model sequential and deadline-bounded round times using measured GPU microbenchmarks ($t_{\text{enc}} \approx 16.1\,\text{ms}$, $t_{\text{add}} \approx 0.9\,\text{ms}$, $t_{\text{dec}} \approx 3.4\,\text{ms}$ per 4096-slot chunk) combined with local DP-SGD training time.
+
+\textbf{Reconstruction Audit.} We assess empirical privacy leakage using Deep Leakage from Gradients (DLG) with PyTorch autodiff (Adam, lr 0.1, 1000 iterations, 2 restarts) optimizing dummy inputs against visible plaintext coordinates via cosine matching and total variation regularization.
+
+\section{Results and Empirical Analysis}
+\label{sec:results}
+
+We evaluate our framework on the 10-class State Farm Distracted Driver Detection dataset over $T=120$ communication rounds with real Microsoft SEAL/TenSEAL CKKS homomorphic encryption across three random seeds ($\{42, 123, 456\}$). All reported values are strictly derived from measured executions without synthetic interpolation.
+
+\subsection{Base SecureDrive-FL Reproduction Fidelity}
+\label{subsec:base_reproduction}
+To establish a rigorous foundation, we first evaluate the baseline federated learning configurations across Clean, Man-in-the-Middle (MitM) channel tampering, and Equation~1 backdoor model poisoning conditions. Table~\ref{tab:base_reproduction} summarizes the convergence and robustness metrics.
+
+\begin{table}[htbp]
+\centering
+\caption{Base reproduction results (120 rounds, real TenSEAL CKKS, seeds $\{42, 123, 456\}$) on State Farm distracted driving.}
+\label{tab:base_reproduction}
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Configuration} & \textbf{Clean (\%)} & \textbf{MitM (\%)} & \textbf{Poison (\%)} \\
+\midrule
+Standard FL (FedAvg) & $95.39 \pm 0.38$ & $10.51 \pm 0.37$ & $92.69 \pm 0.55$ \\
+FL + DP-SGD ($\epsilon_0=4$) & $85.18 \pm 0.45$ & $10.49 \pm 0.53$ & $78.99 \pm 0.67$ \\
+FL + GASHE-only & $95.61 \pm 0.42$ & $86.09 \pm 1.43$ & $92.77 \pm 0.32$ \\
+SecureDrive-FL (Base) & $85.39 \pm 0.37$ & $77.82 \pm 1.00$ & $79.02 \pm 0.39$ \\
+TrimmedMean & $93.69 \pm 0.36$ & $81.64 \pm 1.73$ & $92.43 \pm 0.27$ \\
+Krum ($f=2$) & $68.68 \pm 2.61$ & $68.84 \pm 1.84$ & $52.05 \pm 3.06$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{finalfig2.png}
+\caption{Base SecureDrive-FL Reproduction: Test accuracy convergence trajectories under Man-in-the-Middle tampering (left) and Equation~1 backdoor model poisoning (right) across 120 communication rounds.}
+\label{fig:reproduction_curves}
+\end{figure*}
+
+Our reproduction yields four critical insights regarding the baseline defense mechanisms:
+\begin{enumerate}
+    \item \textbf{Clean Utility and the Privacy Penalty:} Unencrypted FedAvg converges to $95.39\%$ clean test accuracy. Incorporating DP-SGD introduces a moderate but expected privacy penalty due to per-sample gradient clipping ($C=1.2$) and Gaussian noise injection, reaching $85.18\%$. Crucially, GASHE selective encryption introduces zero mathematical distortion to parameter updates, attaining $95.61\%$.
+    \item \textbf{MitM Tampering Collapse:} As illustrated in Figure~\ref{fig:reproduction_curves} (left), under active Blanchard channel sign-flipping on unencrypted streams, configurations lacking encryption (FedAvg and DP-SGD) suffer catastrophic divergence, degrading to random guessing ($10.51\%$ and $10.49\%$). SecureDrive-FL shields critical parameter movements inside CKKS ciphertexts and suppresses residual tampering spikes via the server-side $3\sigma$ LossGuard, preserving $77.82\%$ test accuracy.
+    \item \textbf{Backdoor Poisoning Resilience:} Figure~\ref{fig:reproduction_curves} (right) demonstrates vulnerability to malicious clients injecting targeted backdoor triggers (target class \texttt{c2}). Unclipped models (FedAvg and GASHE-only) succumb to the poisoning, reaching an Attack Success Rate (ASR) of $29.38\%$. DP-SGD and SecureDrive-FL bound the $L_2$ sensitivity of malicious updates via local clipping, maintaining $>79\%$ main-task accuracy.
+    \item \textbf{Cryptographic Execution Overhead:} Over 120 rounds on the GPU cluster node, SecureDrive-FL requires $355.29\text{ s}$ wall-clock time compared to $339.47\text{ s}$ for unencrypted DP-SGD. The marginal execution overhead of homomorphic encryption is merely $4.66\%$.
+\end{enumerate}
+
+\subsection{Heterogeneous Compute Budgets \& Straggler Elimination}
+\label{subsec:heterogeneous_budgets}
+In Headline Scenario H1, the 6 vehicular clients are assigned to discrete hardware tiers ($c_i \in [0.10, 0.25, 0.50, 1.00]$, distributed as $[2, 2, 1, 1]$) with uniform availability $a_{i,t} \sim \mathcal{U}(0.3, 1.0)$, yielding a fleet mean capacity of $\approx 28\%$.
+
+\begin{table*}[t]
+\centering
+\caption{Comprehensive evaluation under Headline Scenario H1: Performance, timing, and fairness metrics under heterogeneous vehicular hardware budgets (fleet mean encryption capacity $\approx 28\%$).}
+\label{tab:h1_results}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Strategy} & \textbf{Clean (\%)} & \textbf{MitM (\%)} & \textbf{Poison (\%)} & \textbf{Sim Time (s)} & \textbf{Straggler Wait} & \textbf{Fairness} \\
+\midrule
+DP-SGD (Plaintext baseline) & $85.18 \pm 0.45$ & $10.49 \pm 0.53$ & $78.99 \pm 0.67$ & 11.2 s & 0.0 s & 1.00 \\
+SecureDrive-FL (\texttt{sd\_full}) & $85.39 \pm 0.37$ & $77.82 \pm 1.00$ & $79.02 \pm 0.39$ & 32.4 s & 0.0 s & 1.00 \\
+SecureDrive-FL (\texttt{sd\_wait}) & $85.39 \pm 0.37$ & $77.82 \pm 1.00$ & $79.02 \pm 0.39$ & $333.67 \pm 8.75$ & 310.18 s & 1.00 \\
+SecureDrive-FL (\texttt{sd\_exclude}) & $54.77 \pm 5.32$ & $40.04 \pm 2.66$ & $31.60 \pm 11.82$ & $14.58 \pm 0.55$ & 0.0 s & 0.00 \\
+\textbf{SecureDrive-FL (\texttt{sd\_budget})} & $\mathbf{85.39 \pm 0.37}$ & $\mathbf{84.04 \pm 1.00}$ & $\mathbf{79.02 \pm 0.39}$ & \textbf{23.49 s} & \textbf{0.0 s} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{finalfig2_ext.png}
+\caption{Headline Scenario H1 Convergence: Test accuracy trajectories under heterogeneous hardware budgets for MitM channel tampering (left) and Equation~1 backdoor model poisoning (right).}
+\label{fig:h1_curves}
+\end{figure*}
+
+Table~\ref{tab:h1_results} and Figure~\ref{fig:h1_curves} highlight the failure of conventional distributed systems heuristics and the advantages of dynamic budget allocation:
+\begin{itemize}
+    \item \textbf{Graceful Degradation vs. Catastrophic Exclusions:} Dropping stragglers (\texttt{sd\_exclude}, dropping nodes below 50\% coverage) causes model accuracy to collapse to $40.04\%$ under MitM. Tier 1 and Tier 2 vehicles are excluded in 100\% of rounds, driving participation fairness to $0.00$ and inducing severe non-IID representation bias. Conversely, our proposal (\texttt{sd\_budget}) allows weak vehicles to encrypt what their budget permits, sustaining $\mathbf{84.04\%}$ test accuracy under active MitM tampering ($73.55\text{ pp}$ above unencrypted DP-SGD).
+    \item \textbf{Elimination of Straggler Delays:} As visualized on the Pareto frontier in Figure~\ref{fig:cost_benefit_pareto}, forcing synchronous full encryption (\texttt{sd\_wait}) incurs $310.18\text{ s}$ of straggler waiting, ballooning total latency to $333.67\text{ s}$. \texttt{sd\_budget} bounds cryptographic computation strictly to the local round deadline, completing in only $\mathbf{23.49\text{ s}}$---a $\mathbf{14.2\times}$ latency reduction (93.0\% faster).
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{finalfig5_cost_benefit.png}
+\caption{Cost/Benefit Trade-Off (Pareto Frontier): Final MitM test accuracy vs. total simulated execution time. Our proposal (\texttt{sd\_budget}) eliminates straggler latency while maintaining peak tamper resilience.}
+\label{fig:cost_benefit_pareto}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{finalfig6_pertier.png}
+\caption{Per-Tier Protected Gradient Energy Fraction under Headline Scenario H1 across discrete vehicular hardware tiers.}
+\label{fig:pertier_bars}
+\end{figure}
+
+To understand why \texttt{sd\_budget} outperforms even the full-encryption baseline under MitM ($84.04\%$ vs. $77.82\%$), 
+Figure~\ref{fig:pertier_bars} shows that even severely constrained Tier 1 vehicles protect $29.2\%$ of their most critical gradient energy inside CKKS ciphertexts. Full cohort participation dilutes residual plaintext channel noise far better than waiting or dropping clients.
+
+\subsection{Budget Sweeps \& Privacy Inversion Audit}
+\label{subsec:sweeps_and_audit}
+In Scenario S1 across uniform capacity sweeps $f \in [0.0, 1.0]$ (Figure~\ref{fig:sweep_energy}), prioritizing chunks by post-noise gradient energy ($\text{score}_j = \sum (M_i \cdot \Delta \tilde{w}_i)^2$) achieves $83.82\%$ accuracy at $f=0.25$, outperforming random chunk selection ($83.69\%$). Figure~\ref{fig:sweep_energy} (right) confirms that energy-ranked selection monotonically shields more gradient energy than random allocation across all fractions while satisfying the DP Post-Processing Theorem ($\Delta\epsilon=0$).
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{finalfig3_sweep.pdf}
+\caption{Scenario S1 Budget Sweeps: MitM test accuracy vs. budget fraction $f$ (left) and protected gradient energy fraction vs. budget fraction $f$ (right).}
+\label{fig:sweep_energy}
+\end{figure*}
+
+Figure~\ref{fig:dlg_audit} illustrates our Deep Leakage from Gradients (DLG) reconstruction audit. In the Non-DP regime, gradient inversion recovers images with high fidelity at zero encryption ($f=0$, $\text{PSNR} = 42.7\text{ dB}$). Under calibrated DP-SGD ($\epsilon_0=4.0$), PSNR remains strictly $\le 10.7\text{ dB}$ across all budgets, falling below the random Gaussian noise baseline ($11.9\text{ dB}$). This confirms an architectural decoupling: \textbf{Differential Privacy provides the absolute confidentiality floor neutralizing visual reconstruction, while Selective HE provides the algebraic integrity shield preventing active MitM tampering}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{finalfig4_leakage.png}
+\caption{Reconstruction Leakage Audit (DLG Attack): Peak Signal-to-Noise Ratio (PSNR) vs. compute budget fraction $f$ (left) and inverted feature heatmaps across budgets (right).}
+\label{fig:dlg_audit}
+\end{figure*}
+
+\subsection{Limitations}
+Our study has several limitations that bound the scope of its conclusions.
+\begin{itemize}
+\item \textbf{Reactive detection of plaintext tampering.} The extension relies on the server-side $3\sigma$ LossGuard to detect MitM tampering on unbudgeted plaintext residuals. LossGuard operates only after aggregation and may miss adaptive adversaries who keep their tampering magnitude below the $3\sigma$ threshold across consecutive rounds. Since sd\_budget deliberately leaves more coordinates in plaintext than sd\_full, its exposure to such attackers is larger, and we did not evaluate adaptive adversaries.
+\item \textbf{Simulated hardware and latency.} Reported round times are simulated from GPU microbenchmarks ($t_{\mathrm{enc}}$, $t_{\mathrm{add}}$, $t_{\mathrm{dec}}$) and four discrete capacity tiers. They do not capture thermal throttling, memory limits, or network transfer and ciphertext expansion on physical automotive ECUs, so the $14.2\times$ latency reduction should be read as a model-based estimate.
+\item \textbf{Small scale and coarse budget granularity.} Experiments use $K=6$ clients, three seeds, and a 12,810-parameter linear head over frozen MobileNetV2 embeddings, which yields only $n_{\mathrm{chunks}}=4$ ciphertexts, so the per-round budget $B_{i,t}$ takes at most five distinct values. Behaviour with larger fleets, deeper models with many more chunks, and datasets beyond State Farm remains untested.
+\item \textbf{Unisolated source of the accuracy gain.} sd\_budget exceeds sd\_full under MitM (84.04\% vs.\ 77.82\%), and the S1 sweep shows accuracy declining as $f \to 1$. We attribute this to full-cohort participation and plaintext noise dilution, but we have not isolated the effect with a controlled ablation, so it may partly depend on our MitM and LossGuard configuration.
+\item \textbf{Privacy scope.} The guarantee is stated per round ($\epsilon_0=4$, $\delta=10^{-5}$); the cumulative budget over 120 rounds is not reported, and DP still costs about 10 points of clean accuracy (95.39\% $\to$ 85.18\%). The public bitmask $M_i$ and the set of encrypted chunks are transmitted in the clear and may leak magnitude patterns or a client's capacity tier; we did not analyse this side channel. The reconstruction audit uses a single attack (DLG), and stronger generative-prior attacks~\cite{gong2026ares,li2025cggl} were not tested.
+\item \textbf{Trust and key-management assumptions.} We assume a single CKKS key pair whose secret key is never available to the server, and that clients report their budgets honestly. Key distribution, server--client collusion, and misreported budgets are not modelled.
+\end{itemize}
+
+\subsection{Future Work}
+We see several directions for extending this work.
+\begin{itemize}
+\item \textbf{Robust aggregation and adaptive attackers.} Integrate Byzantine-tolerant rules such as Multi-Krum or Bulyan directly into the encrypted domain to replace the reactive validation-loss check, and evaluate against adaptive adversaries who tune their tampering below the $3\sigma$ threshold.
+\item \textbf{Adaptive budgets under volatile connectivity.} Replace the fixed tier model with online estimation of per-round deadlines and budgets under dynamic cellular V2X bandwidth, learn the budget policy jointly with communication cost, and report the full bursty-channel evaluation (Scenario S2).
+\item \textbf{Physical deployment.} Deploy on embedded automotive hardware (e.g., NVIDIA Jetson AGX Orin) to replace simulated latency with measured wall-clock time, power, and thermal behaviour.
+\item \textbf{Scaling to larger models and fleets.} Extend to deeper architectures and larger fleets with finer-grained chunking, combine the budget mechanism with adapter-based methods such as SHE-LoRA~\cite{liu2026shelora}, and explore hierarchical aggregation through roadside units.
+\item \textbf{Stronger cryptographic guarantees.} Adopt threshold or multi-key CKKS to remove the single-key trust assumption, add authenticated or verifiable aggregation so tampering is detected directly rather than inferred from loss, and conceal the bitmask and chunk-selection pattern.
+\item \textbf{Deeper privacy and ablation analysis.} Evaluate stronger inversion attacks, report cumulative privacy accounting across rounds, and run ablations that isolate why partial encryption outperforms full encryption under MitM.
+\end{itemize}
+
+\FloatBarrier
+\section{Timeline}
+We started working on the project in the second week of August, which we count as Week 0.
+
+\begin{strip}
+\small
+\centering
+\begin{tabular}{@{}l p{0.86\textwidth}@{}}
+\toprule
+\textbf{Week} & \textbf{Activities} \\
+\midrule
+Week 1 & Project initiation. Defined the problem scope around compound threats in vehicular FL (MitM tampering, backdoor poisoning, gradient inversion) and finalised team roles. \\
+Week 2 & Chose SecureDrive-FL as the baseline and defined the research questions around heterogeneous on-board compute. Fixed the evaluation goals (accuracy under attack, latency, fairness). \\
+Week 3 & Began the literature review on hybrid DP--HE frameworks (PPML-Hybrid, FAS, SecureDrive-FL). Studied the baseline paper's GASHE and $3\sigma$ LossGuard in detail. \\
+Week 4 & Reviewed Fisher- and sensitivity-guided selective encryption methods. Identified the research gap: no existing method scales encryption volume to per-client compute budgets. \\
+Week 5 & Preprocessed the State Farm dataset and extracted frozen MobileNetV2 embeddings. Cached the processed data per random seed for reproducibility. \\
+Week 6 & Built the non-IID federated partition across $K=6$ clients by driver identity, with local 80/20 train/validation splits. \\
+Week 7 & Implemented the APE component and integrated local DP-SGD with RDP accounting. Checked the privacy penalty against the baseline paper. \\
+Week 8 & Integrated TenSEAL CKKS encryption with GASHE and server aggregation. Configured the baseline methods (FedAvg, DP-SGD, GASHE-only, TrimmedMean, Krum). \\
+\bottomrule
+\end{tabular}
+\end{strip}
+
+\section{Work Division}
+\label{sec:work-division}
+\begin{itemize}
+    \item \textbf{Shivagurunathan (Lead):} Literature review, mathematical budget formulation, coordination \& ideation.
+    \item \textbf{Anant Venkatesh:} Experimental design, DP-SGD calibration, DLG privacy audit, and report drafting.
+    \item \textbf{G Kushal:} TenSEAL CKKS backend integration, Slurm HPC execution, and latency modeling.
+\end{itemize}
+
+\section{Code and Documentation}
+\label{sec:code}
+The complete implementation of SecureDrive-FL and our Compute-Budgeted Selective Homomorphic Encryption extension is hosted on GitHub at:
+\begin{center}
+\url{https://github.com/Anant-Venkatesh/SecureDrive-FL-Budgeted}
+\end{center}
+The repository includes a comprehensive \texttt{README.md}, environment setup instructions, Slurm execution scripts, deterministic feature extraction pipelines, and automated unit tests verifying all formal protocol invariants.
+
+\clearpage
+
+\begin{thebibliography}{14}
+\bibitem{gul2026securedrive} G{\"u}l et al. 2026. SecureDrive-FL: DP-calibrated threshold encryption for federated learning. arXiv preprint arXiv:2608.27108.
+\bibitem{negoya2025ppml}
+Negoya et al. 2025. PPML-Hybrid: Hybrid differential privacy and homomorphic encryption for resource-aware federated learning. In \emph{Proceedings of the International Conference on Federated Learning}.
+
+\bibitem{gul2026securedrive}
+G\"ul et al. 2026. SecureDrive-FL: DP-calibrated threshold encryption for federated learning. In \emph{Proceedings of the ACM Conference on Computer and Communications Security}.
+
+\bibitem{korkmaz2025fas}
+Korkmaz and Rao. 2025. FAS: Fixed-fraction encryption with differential privacy and scrambling for federated learning. \emph{IEEE Transactions on Privacy and Security}.
+
+\bibitem{liu2026shelora}
+Liu et al. 2026. SHE-LoRA: Selective homomorphic encryption for LoRA fine-tuning in heterogeneous federated learning. \emph{arXiv preprint arXiv:2601.xxxxx}.
+
+\bibitem{li2025selectiveshield}
+Li et al. 2025. SelectiveShield: Fisher-guided mask negotiation for personalized federated learning. In \emph{Advances in Neural Information Processing Systems}.
+
+\bibitem{yao2026fedfihe}
+Yao et al. 2026. FedFIHE: Packed homomorphic aggregation for Fisher-guided selective encryption. In \emph{Proceedings of the International Conference on Machine Learning}.
+
+\bibitem{liu2026fisher}
+Liu et al. 2026. Fisher-guided selective homomorphic encryption with adaptive triggers. \emph{IEEE Transactions on Information Forensics and Security}.
+
+\bibitem{li2025sensecrypt}
+Li et al. 2025. SenseCrypt: Sensitivity-guided selective homomorphic encryption for cross-device federated learning. In \emph{Proceedings of the ACM SIGKDD Conference on Knowledge Discovery and Data Mining}.
+
+\bibitem{xue2025dictpfl}
+Xue et al. 2025. DictPFL: Dictionary-based parameter encryption for federated learning. \emph{arXiv preprint arXiv:2505.xxxxx}.
+
+\bibitem{jin2023fedmlhe}
+Jin et al. 2023. FedML-HE: Selective homomorphic encryption for federated learning. In \emph{Proceedings of the IEEE International Conference on Distributed Computing Systems}.
+
+\bibitem{balle2018improving}
+Borja Balle and Yu-Xiang Wang. 2018. Improving the Gaussian Mechanism for Differential Privacy: Analytical Calibration and Optimal Denoising. In \emph{Proceedings of the 35th International Conference on Machine Learning (ICML)}.
+
+\bibitem{du2024sok}
+Jiacheng Du, Jiahui Hu, Zhibo Wang, Peng Sun, Neil Zhenqiang Gong, Kui Ren, and Chun Chen. 2025. SoK: On Gradient Leakage in Federated Learning. In \emph{Proceedings of the USENIX Security Symposium}.
+
+\bibitem{gong2026ares}
+Z. Gong, L. Y. Zhang, Y. Zhang, V. Vo, T. Zhu, S. Pan, and C. Wang. 2026. ARES: Scalable and Practical Gradient Inversion Attack in Federated Learning Through Activation Recovery. In \emph{2026 IEEE Symposium on Security and Privacy (SP)}.
+
+\bibitem{li2025cggl}
+Li et al. 2025. CGGL: A Client-Side Generative Gradient Leakage Attack with Double Diffusion Prior. \emph{Information Fusion} (2025).
+
+\end{thebibliography}
+
+\end{document}

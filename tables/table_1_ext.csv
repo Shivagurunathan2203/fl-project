@@ -1,0 +1,11 @@
+Strategy,DP,Clean (%),MitM (%),Poison (%),ASR (%),Macro-F1 (%),Macro-Precision (%)
+"Standard FL (FedAvg, base reuse)",No,95.39 ± 0.38,10.51 ± 0.37,92.69 ± 0.55,29.38 ± 3.75,92.67 ± 0.56,93.42 ± 0.40
+FL + DP-SGD (base reuse),Yes,85.18 ± 0.45,10.49 ± 0.53,78.99 ± 0.67,41.40 ± 4.46,78.85 ± 0.55,82.86 ± 0.43
+FL + GASHE-only (base reuse),No,95.61 ± 0.42,86.09 ± 1.43,92.77 ± 0.32,28.26 ± 1.21,92.77 ± 0.36,93.49 ± 0.28
+FL + GASHE-budgeted (proposal non-DP),No,95.61 ± 0.42,94.67 ± 0.63,92.77 ± 0.32,28.26 ± 1.21,92.77 ± 0.36,93.49 ± 0.28
+"SecureDrive-FL (unlimited budget, base reuse)",Yes,85.39 ± 0.37,77.82 ± 1.00,79.02 ± 0.39,40.41 ± 1.44,78.89 ± 0.24,83.03 ± 0.50
+"SecureDrive-FL (sd_wait, straggler wait)",Yes,85.39 ± 0.37,77.82 ± 1.00,79.02 ± 0.39,40.41 ± 1.44,78.89 ± 0.24,83.03 ± 0.50
+"SecureDrive-FL (sd_budget, proposal)",Yes,85.39 ± 0.37,84.04 ± 1.00,79.02 ± 0.39,40.41 ± 1.44,78.89 ± 0.24,83.03 ± 0.50
+"SecureDrive-FL (sd_exclude, drop weak)",Yes,54.77 ± 5.32,40.04 ± 2.66,31.60 ± 11.82,67.20 ± 44.29,31.24 ± 13.12,58.12 ± 6.00
+SecureDrive-FL (random ranking),Yes,n/a,84.26 ± 0.58,n/a,3.00 ± 0.45,83.67 ± 0.69,84.27 ± 0.69
+SecureDrive-FL (layer-static ranking),Yes,n/a,84.35 ± 0.49,n/a,3.36 ± 0.25,83.80 ± 0.51,84.37 ± 0.63

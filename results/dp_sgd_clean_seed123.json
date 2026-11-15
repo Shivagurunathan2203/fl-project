@@ -1,0 +1,1131 @@
+{
+  "config_name": "dp_sgd",
+  "condition": "clean",
+  "seed": 123,
+  "rounds": 120,
+  "data_source": "real",
+  "he_backend": "tenseal",
+  "model": "numpy_softmax",
+  "noise_std_used": 1.4534415787816166,
+  "chunk_size": 4096,
+  "git_hash": "unknown",
+  "config_hash": "4fd4e27ef1ccaf5df40a46564a63792c146cc401d73e7e3599f2f475a752604a",
+  "resolved_config": {
+    "n_clients": 6,
+    "rounds": 120,
+    "local_epochs": 3,
+    "batch": 32,
+    "lr": 0.02,
+    "use_dp": true,
+    "clip_C": 1.2,
+    "sigma": 1.4534415787816166,
+    "z": 1.2112013156513473,
+    "delta": 1e-05,
+    "use_gashe": false,
+    "top_k": 0.6,
+    "aggregator": "fedavg",
+    "krum_f": 2,
+    "attack": null,
+    "mitm_noise_std": 1.0,
+    "poison_mode": "backdoor",
+    "poison_alpha": 0.5,
+    "poison_boost": 1.0,
+    "target_class": 2,
+    "separation": 3.8
+  },
+  "elapsed_time_s": 335.26101761707105,
+  "peak_rss_mb": 404.19921875,
+  "final_accuracy": 0.8577797592510031,
+  "macro_f1": 0.8523773480259607,
+  "macro_precision": 0.8559820443905158,
+  "asr": 0.02252816020025031,
+  "final_epsilon": 13.32170964429247,
+  "epsilon_at_120": 13.32170964429247,
+  "gap_to_paper_48_94": -35.61829035570753,
+  "mean_enc_frac": 0.0,
+  "tau_tiers": [
+    "n/a"
+  ],
+  "history": [
+    {
+      "round": 1,
+      "acc": 0.35109228711547036,
+      "loss": 2.219111888633202,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 1.4356393159600365
+    },
+    {
+      "round": 2,
+      "acc": 0.456531431119037,
+      "loss": 2.1481600498565427,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 1.7208874097819407
+    },
+    {
+      "round": 3,
+      "acc": 0.49398127507802053,
+      "loss": 2.0809931240469304,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 2.0056848414244
+    },
+    {
+      "round": 4,
+      "acc": 0.5465893892108783,
+      "loss": 2.015302384739941,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 2.2668467576334437
+    },
+    {
+      "round": 5,
+      "acc": 0.5679893000445831,
+      "loss": 1.9547850959679596,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 2.513754961903743
+    },
+    {
+      "round": 6,
+      "acc": 0.5934016941596076,
+      "loss": 1.893792957349781,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 2.7323014640507868
+    },
+    {
+      "round": 7,
+      "acc": 0.5954079358002675,
+      "loss": 1.8385696569822023,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 2.947832427539038
+    },
+    {
+      "round": 8,
+      "acc": 0.6007579135086937,
+      "loss": 1.7851058074749246,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.137952944099112
+    },
+    {
+      "round": 9,
+      "acc": 0.6239411502452074,
+      "loss": 1.7348694285491921,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.3246091073798905
+    },
+    {
+      "round": 10,
+      "acc": 0.630405706642889,
+      "loss": 1.6879707144327951,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.511265270660668
+    },
+    {
+      "round": 11,
+      "acc": 0.6355327686134641,
+      "loss": 1.6481119501843597,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.6733774711099993
+    },
+    {
+      "round": 12,
+      "acc": 0.6359786000891663,
+      "loss": 1.607615797855236,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.8328826129537843
+    },
+    {
+      "round": 13,
+      "acc": 0.635309852875613,
+      "loss": 1.5681485789508354,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 3.9923877547975684
+    },
+    {
+      "round": 14,
+      "acc": 0.6493535443602318,
+      "loss": 1.5290089300053165,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.151892896641352
+    },
+    {
+      "round": 15,
+      "acc": 0.6558181007579135,
+      "loss": 1.4960926341927114,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.308767269864035
+    },
+    {
+      "round": 16,
+      "acc": 0.6638430673205529,
+      "loss": 1.4608706569942678,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.4425127483220335
+    },
+    {
+      "round": 17,
+      "acc": 0.6649576460098083,
+      "loss": 1.4272850053074386,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.576258226780033
+    },
+    {
+      "round": 18,
+      "acc": 0.6825679893000446,
+      "loss": 1.3937926056533623,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.710003705238032
+    },
+    {
+      "round": 19,
+      "acc": 0.6803388319215337,
+      "loss": 1.3669200747431332,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.843749183696032
+    },
+    {
+      "round": 20,
+      "acc": 0.6823450735621935,
+      "loss": 1.3393084491145313,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 4.977494662154031
+    },
+    {
+      "round": 21,
+      "acc": 0.6879179670084707,
+      "loss": 1.3118111507928811,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.11124014061203
+    },
+    {
+      "round": 22,
+      "acc": 0.6892554614355774,
+      "loss": 1.2861253671955097,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.244985619070029
+    },
+    {
+      "round": 23,
+      "acc": 0.6928221132411948,
+      "loss": 1.2606232365504737,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.3787310975280285
+    },
+    {
+      "round": 24,
+      "acc": 0.6917075345519393,
+      "loss": 1.2380415863026786,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.498392966991161
+    },
+    {
+      "round": 25,
+      "acc": 0.6990637539010254,
+      "loss": 1.215803407342329,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.607566367022352
+    },
+    {
+      "round": 26,
+      "acc": 0.7019616584930896,
+      "loss": 1.1946370185787138,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.716739767053545
+    },
+    {
+      "round": 27,
+      "acc": 0.7079803834150691,
+      "loss": 1.1732649754451365,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.825913167084736
+    },
+    {
+      "round": 28,
+      "acc": 0.702853321444494,
+      "loss": 1.1571571128576303,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 5.935086567115928
+    },
+    {
+      "round": 29,
+      "acc": 0.7095407935800268,
+      "loss": 1.1364696490653055,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.04425996714712
+    },
+    {
+      "round": 30,
+      "acc": 0.7106553722692822,
+      "loss": 1.1163230543259717,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.1534333671783115
+    },
+    {
+      "round": 31,
+      "acc": 0.7097637093178778,
+      "loss": 1.1010477491188833,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.262606767209503
+    },
+    {
+      "round": 32,
+      "acc": 0.7106553722692822,
+      "loss": 1.0839724630031802,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.371780167240695
+    },
+    {
+      "round": 33,
+      "acc": 0.7193490860454748,
+      "loss": 1.0671035850239836,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.480953567271888
+    },
+    {
+      "round": 34,
+      "acc": 0.7186803388319215,
+      "loss": 1.0505688633953005,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.590126967303079
+    },
+    {
+      "round": 35,
+      "acc": 0.7238074008024966,
+      "loss": 1.0355586247203732,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.699300367334271
+    },
+    {
+      "round": 36,
+      "acc": 0.7300490414623272,
+      "loss": 1.0191930600104084,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.808473767365463
+    },
+    {
+      "round": 37,
+      "acc": 0.7313865358894338,
+      "loss": 1.0083699021423356,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 6.9176471673966535
+    },
+    {
+      "round": 38,
+      "acc": 0.7313865358894338,
+      "loss": 0.993622485782475,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.026820567427846
+    },
+    {
+      "round": 39,
+      "acc": 0.7394115024520731,
+      "loss": 0.9758390144815978,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.135993967459038
+    },
+    {
+      "round": 40,
+      "acc": 0.743869817209095,
+      "loss": 0.9610255568288082,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.245167367490231
+    },
+    {
+      "round": 41,
+      "acc": 0.7452073116362015,
+      "loss": 0.9511427324107563,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.349023349400394
+    },
+    {
+      "round": 42,
+      "acc": 0.7458760588497548,
+      "loss": 0.9389930426736505,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.434666801296581
+    },
+    {
+      "round": 43,
+      "acc": 0.7534551939366919,
+      "loss": 0.9268898682790784,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.520310253192767
+    },
+    {
+      "round": 44,
+      "acc": 0.7579135086937138,
+      "loss": 0.9160931030307847,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.605953705088954
+    },
+    {
+      "round": 45,
+      "acc": 0.7592510031208203,
+      "loss": 0.9039232202745348,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.691597156985141
+    },
+    {
+      "round": 46,
+      "acc": 0.7623718234507356,
+      "loss": 0.8935851781962606,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.777240608881327
+    },
+    {
+      "round": 47,
+      "acc": 0.7637093178778421,
+      "loss": 0.8826290431347659,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.862884060777514
+    },
+    {
+      "round": 48,
+      "acc": 0.7619259919750334,
+      "loss": 0.8731617576947084,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 7.948527512673701
+    },
+    {
+      "round": 49,
+      "acc": 0.7690592955862684,
+      "loss": 0.8635832723942047,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.034170964569887
+    },
+    {
+      "round": 50,
+      "acc": 0.7703967900133749,
+      "loss": 0.8540634521601976,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.119814416466074
+    },
+    {
+      "round": 51,
+      "acc": 0.7750780205082479,
+      "loss": 0.8450527702145508,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.20545786836226
+    },
+    {
+      "round": 52,
+      "acc": 0.777753009362461,
+      "loss": 0.8334065148106703,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.291101320258447
+    },
+    {
+      "round": 53,
+      "acc": 0.7790905037895676,
+      "loss": 0.8232712533960774,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.376744772154634
+    },
+    {
+      "round": 54,
+      "acc": 0.7790905037895676,
+      "loss": 0.8170228267927209,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.46238822405082
+    },
+    {
+      "round": 55,
+      "acc": 0.7831029870708872,
+      "loss": 0.8054127424150115,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.548031675947007
+    },
+    {
+      "round": 56,
+      "acc": 0.7857779759251003,
+      "loss": 0.7957593956401474,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.633675127843194
+    },
+    {
+      "round": 57,
+      "acc": 0.7860008916629514,
+      "loss": 0.7893375917866631,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.71931857973938
+    },
+    {
+      "round": 58,
+      "acc": 0.7884529647793134,
+      "loss": 0.7799227008901182,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.804962031635567
+    },
+    {
+      "round": 59,
+      "acc": 0.7877842175657601,
+      "loss": 0.7708947246384852,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.890605483531752
+    },
+    {
+      "round": 60,
+      "acc": 0.7877842175657601,
+      "loss": 0.7676003004488462,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 8.97624893542794
+    },
+    {
+      "round": 61,
+      "acc": 0.7915737851092287,
+      "loss": 0.757966919645543,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.061892387324127
+    },
+    {
+      "round": 62,
+      "acc": 0.7935800267498886,
+      "loss": 0.7487087103858198,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.147535839220312
+    },
+    {
+      "round": 63,
+      "acc": 0.7942487739634418,
+      "loss": 0.743590298287471,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.2331792911165
+    },
+    {
+      "round": 64,
+      "acc": 0.794694605439144,
+      "loss": 0.7354857601183005,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.318822743012687
+    },
+    {
+      "round": 65,
+      "acc": 0.7960320998662506,
+      "loss": 0.7293146959356661,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.404466194908872
+    },
+    {
+      "round": 66,
+      "acc": 0.8007133303611235,
+      "loss": 0.7204085691952024,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.49010964680506
+    },
+    {
+      "round": 67,
+      "acc": 0.799598751671868,
+      "loss": 0.7162050990616828,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.575753098701247
+    },
+    {
+      "round": 68,
+      "acc": 0.8029424877396344,
+      "loss": 0.7095996502846882,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.661396550597432
+    },
+    {
+      "round": 69,
+      "acc": 0.8053945608559965,
+      "loss": 0.703326882420955,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.74704000249362
+    },
+    {
+      "round": 70,
+      "acc": 0.8060633080695497,
+      "loss": 0.6960345822088928,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.832683454389805
+    },
+    {
+      "round": 71,
+      "acc": 0.8074008024966562,
+      "loss": 0.6929982158918745,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 9.918326906285992
+    },
+    {
+      "round": 72,
+      "acc": 0.809184128399465,
+      "loss": 0.6857919530732087,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.00397035818218
+    },
+    {
+      "round": 73,
+      "acc": 0.8089612126616139,
+      "loss": 0.6825051015359523,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.089613810078365
+    },
+    {
+      "round": 74,
+      "acc": 0.8129736959429336,
+      "loss": 0.6749084962900328,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.175257261974552
+    },
+    {
+      "round": 75,
+      "acc": 0.811636201515827,
+      "loss": 0.6695206494438559,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.26090071387074
+    },
+    {
+      "round": 76,
+      "acc": 0.8123049487293803,
+      "loss": 0.6640840125638179,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.346544165766925
+    },
+    {
+      "round": 77,
+      "acc": 0.8136424431564868,
+      "loss": 0.6591026150069498,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.432187617663113
+    },
+    {
+      "round": 78,
+      "acc": 0.8169861792242532,
+      "loss": 0.6528285860329948,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.517831069559298
+    },
+    {
+      "round": 79,
+      "acc": 0.8154257690592955,
+      "loss": 0.6487848306736256,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.603474521455485
+    },
+    {
+      "round": 80,
+      "acc": 0.8192153366027641,
+      "loss": 0.6445319181858196,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.689117973351673
+    },
+    {
+      "round": 81,
+      "acc": 0.8192153366027641,
+      "loss": 0.639931691858565,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.774761425247858
+    },
+    {
+      "round": 82,
+      "acc": 0.8189924208649131,
+      "loss": 0.6348908037016939,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.860404877144045
+    },
+    {
+      "round": 83,
+      "acc": 0.8196611680784663,
+      "loss": 0.6305096056594364,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 10.946048329040233
+    },
+    {
+      "round": 84,
+      "acc": 0.8194382523406153,
+      "loss": 0.6274472375471654,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.031691780936418
+    },
+    {
+      "round": 85,
+      "acc": 0.8230049041462327,
+      "loss": 0.6234515508760098,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.115179295015324
+    },
+    {
+      "round": 86,
+      "acc": 0.8250111457868926,
+      "loss": 0.6190195606345403,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.178223019280386
+    },
+    {
+      "round": 87,
+      "acc": 0.8256798930004459,
+      "loss": 0.6167913340680352,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.241266743545447
+    },
+    {
+      "round": 88,
+      "acc": 0.8283548818546589,
+      "loss": 0.6111479386146339,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.30431046781051
+    },
+    {
+      "round": 89,
+      "acc": 0.8305840392331698,
+      "loss": 0.6061230755196816,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.36735419207557
+    },
+    {
+      "round": 90,
+      "acc": 0.8305840392331698,
+      "loss": 0.6046342171286478,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.430397916340631
+    },
+    {
+      "round": 91,
+      "acc": 0.8312527864467232,
+      "loss": 0.5998253894006009,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.493441640605692
+    },
+    {
+      "round": 92,
+      "acc": 0.8321444493981275,
+      "loss": 0.5963895859611796,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.556485364870753
+    },
+    {
+      "round": 93,
+      "acc": 0.8339277753009362,
+      "loss": 0.5909950699786867,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.619529089135815
+    },
+    {
+      "round": 94,
+      "acc": 0.8350423539901917,
+      "loss": 0.5874960805421908,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.682572813400876
+    },
+    {
+      "round": 95,
+      "acc": 0.8339277753009362,
+      "loss": 0.584569319611568,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.745616537665938
+    },
+    {
+      "round": 96,
+      "acc": 0.8330361123495319,
+      "loss": 0.5805918797478202,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.808660261931
+    },
+    {
+      "round": 97,
+      "acc": 0.8366027641551493,
+      "loss": 0.5767673333859676,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.87170398619606
+    },
+    {
+      "round": 98,
+      "acc": 0.8363798484172983,
+      "loss": 0.574200262725769,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.93474771046112
+    },
+    {
+      "round": 99,
+      "acc": 0.8352652697280428,
+      "loss": 0.5700186176936515,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 11.997791434726182
+    },
+    {
+      "round": 100,
+      "acc": 0.8368256798930005,
+      "loss": 0.5661739055627534,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.060835158991244
+    },
+    {
+      "round": 101,
+      "acc": 0.8363798484172983,
+      "loss": 0.5654620796834484,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.123878883256307
+    },
+    {
+      "round": 102,
+      "acc": 0.8388319215336603,
+      "loss": 0.5594641892191468,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.186922607521367
+    },
+    {
+      "round": 103,
+      "acc": 0.840615247436469,
+      "loss": 0.5562971753040338,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.249966331786428
+    },
+    {
+      "round": 104,
+      "acc": 0.8403923316986179,
+      "loss": 0.5528220940403153,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.313010056051489
+    },
+    {
+      "round": 105,
+      "acc": 0.8430673205528311,
+      "loss": 0.5505550223862815,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.37605378031655
+    },
+    {
+      "round": 106,
+      "acc": 0.8435131520285332,
+      "loss": 0.5481353738105468,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.439097504581612
+    },
+    {
+      "round": 107,
+      "acc": 0.8448506464556398,
+      "loss": 0.5442293444215636,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.502141228846673
+    },
+    {
+      "round": 108,
+      "acc": 0.845519393669193,
+      "loss": 0.5413980016663272,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.565184953111736
+    },
+    {
+      "round": 109,
+      "acc": 0.847748551047704,
+      "loss": 0.5379218695249943,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.628228677376796
+    },
+    {
+      "round": 110,
+      "acc": 0.8486402139991084,
+      "loss": 0.5344009930040079,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.691272401641857
+    },
+    {
+      "round": 111,
+      "acc": 0.8506464556397682,
+      "loss": 0.5318351021038323,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.754316125906918
+    },
+    {
+      "round": 112,
+      "acc": 0.8517610343290236,
+      "loss": 0.5291576681898039,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.817359850171979
+    },
+    {
+      "round": 113,
+      "acc": 0.8544360231832367,
+      "loss": 0.5255824061823388,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.880403574437041
+    },
+    {
+      "round": 114,
+      "acc": 0.8533214444939813,
+      "loss": 0.5231241159824224,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 12.943447298702102
+    },
+    {
+      "round": 115,
+      "acc": 0.852652697280428,
+      "loss": 0.5209554481849787,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.006491022967165
+    },
+    {
+      "round": 116,
+      "acc": 0.8539901917075345,
+      "loss": 0.5198508959889746,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.069534747232225
+    },
+    {
+      "round": 117,
+      "acc": 0.8535443602318323,
+      "loss": 0.5163214380149772,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.132578471497286
+    },
+    {
+      "round": 118,
+      "acc": 0.8562193490860455,
+      "loss": 0.5140846646878923,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.195622195762347
+    },
+    {
+      "round": 119,
+      "acc": 0.8566651805617477,
+      "loss": 0.5107302453786635,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.258665920027408
+    },
+    {
+      "round": 120,
+      "acc": 0.8577797592510031,
+      "loss": 0.5095496985981259,
+      "rejected": false,
+      "flagged": false,
+      "enc_frac": 0.0,
+      "eps": 13.32170964429247
+    }
+  ]
+}

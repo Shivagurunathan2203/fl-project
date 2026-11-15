@@ -1,0 +1,12 @@
+{
+  "t_enc": 0.005213684984482825,
+  "t_dec": 0.001454042037948966,
+  "t_add": 0.0001031580613926053,
+  "bytes_per_chunk": 334327,
+  "plain_bytes_per_coord": 8,
+  "calibration_source": "measured",
+  "n_repeats": 200,
+  "poly_modulus_degree": 8192,
+  "enc_iqr": 0.001105642702896148,
+  "dec_iqr": 0.00030712696025148034
+}
