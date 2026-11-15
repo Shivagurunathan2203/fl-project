@@ -240,7 +240,7 @@ We express our sincere gratitude and credit to the authors of **SecureDrive-FL**
 > Institute of Industrial Automation and Software Engineering, University of Stuttgart & Eindhoven University of Technology (TU/e)  
 > Preprint: [arXiv:2608.27108](https://arxiv.org/abs/2608.27108)
 
-Our implementation builds directly upon their high-level architectural design—specifically the closed-loop coupling of client-side DP-SGD, Gradient-Aware Selective Homomorphic Encryption (GASHE), closed-form sensitivity thresholding ($\tau = \sigma C$), and server-side 3-$\sigma$ LossGuard validation.
+Our implementation builds directly upon their high-level architectural design—specifically the closed-loop coupling of client-side DP-SGD, Gradient-Aware Selective Homomorphic Encryption (GASHE), closed-form sensitivity thresholding ($\tau = \sigma C$), and server-side $3-\sigma$ LossGuard validation.
 
 ---
 
